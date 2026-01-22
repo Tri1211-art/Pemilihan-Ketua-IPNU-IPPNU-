@@ -51,32 +51,77 @@
         </div>
     </div>
 
-    <div id="voteSection" class="hidden">
-        <div class="text-center mb-4">
-            <h3 class="fw-bold">SURAT SUARA DIGITAL</h3>
-            <p class="text-muted">Gunakan hak pilih Anda dengan bijak</p>
-        </div>
-        <div class="row justify-content-center g-4">
-            <div class="col-md-5">
-                <div class="card p-3 candidate-card text-center" onclick="submitVote('Kandidat 01')">
-                    <h2 class="fw-bold text-success">01</h2>
-                    <img src="https://via.placeholder.com/300x400?text=Foto+Kandidat+01" class="candidate-img mb-3">
-                    <h5 class="fw-bold">Nama Calon Ketua 01</h5>
-                    <p class="small text-muted">Visi: Mewujudkan organisasi yang aktif dan religius.</p>
-                    <button class="btn btn-ipnu px-4">PILIH</button>
-                </div>
+   <div id="loginSection" class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card p-4 shadow-lg border-0">
+            <div class="text-center mb-4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_IPNU.png" width="70" alt="Logo">
+                <h4 class="mt-3 fw-bold">E-VOTING MINTHOL</h4>
+                <p class="text-muted small">Masukkan Akun Pemilih / Admin</p>
             </div>
-            <div class="col-md-5">
-                <div class="card p-3 candidate-card text-center" onclick="submitVote('Kandidat 02')">
-                    <h2 class="fw-bold text-success">02</h2>
-                    <img src="https://via.placeholder.com/300x400?text=Foto+Kandidat+02" class="candidate-img mb-3">
-                    <h5 class="fw-bold">Nama Calon Ketua 02</h5>
-                    <p class="small text-muted">Visi: Inovatif dalam prestasi, santun dalam pekerti.</p>
-                    <button class="btn btn-ipnu px-4">PILIH</button>
-                </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Username (NIS)</label>
+                <input type="text" id="username" class="form-control" placeholder="Contoh: 2024001">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Masukkan password">
+            </div>
+            <button onclick="auth()" class="btn btn-success w-100 py-2 fw-bold" style="background-color: #008148;">MASUK</button>
+            
+            <div id="loginError" class="text-danger small mt-2 text-center" style="display:none;">
+                Username atau Password salah!
             </div>
         </div>
     </div>
+</div>
+
+<script>
+    // DATA LOGIN ADMIN
+    const ADMIN_CREDENTIALS = {
+        user: "adminminthol",
+        pass: "panitia2024"
+    };
+
+    // FUNGSI AUTHENTICATION
+    function auth() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        const errorMsg = document.getElementById('loginError');
+
+        // 1. Cek Login Admin
+        if (u === ADMIN_CREDENTIALS.user && p === ADMIN_CREDENTIALS.pass) {
+            showSection('adminSection');
+            refreshChart(); // Memuat diagram batang
+            return;
+        }
+
+        // 2. Cek Login Siswa (Logika Sederhana)
+        // Idealnya ini divalidasi ke database Google Sheets
+        // Namun untuk tahap awal, kita buat validasi NIS minimal 5 angka
+        if (u.length >= 5 && p === "12345") {
+            localStorage.setItem("voterID", u);
+            showSection('voteSection');
+            errorMsg.style.display = 'none';
+        } else {
+            errorMsg.style.display = 'block';
+        }
+    }
+
+    // Fungsi pindah halaman
+    function showSection(id) {
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('voteSection').classList.add('hidden');
+        document.getElementById('adminSection').classList.add('hidden');
+        document.getElementById(id).classList.remove('hidden');
+    }
+
+    function logout() {
+        localStorage.clear();
+        location.reload();
+    }
+</script>
 
     <div id="adminSection" class="hidden">
         <div class="card p-4">
